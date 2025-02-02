@@ -1,9 +1,9 @@
 %{
-#include "parser.tab.h"  
+#include "parser.tab.h"  // ضروری برای ارتباط با Bison
 #include <stdlib.h>
 #include <string.h>
 
-#define YYSTYPE int 
+#define YYSTYPE int  // اگر فقط از اعداد استفاده می‌کنید، این خط را اضافه کنید
 %}
 
 %%
