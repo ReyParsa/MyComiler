@@ -1,4 +1,5 @@
 %{
+#include "common.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -6,12 +7,6 @@ extern int yylex();
 extern int yyparse();
 extern FILE* yyin;
 void yyerror(const char* s);
-
-// تعریف ساختار برای لیست
-typedef struct {
-    int* list;
-    int size;
-} List;
 
 // تابع کمکی برای پیدا کردن ماکزیمم در لیست
 int find_max(int* list, int size) {
@@ -30,6 +25,7 @@ int find_max(int* list, int size) {
 }
 
 %token <num> NUMBER
+%token <num> IDENTIFIER
 %token <num> IS_EVEN FACTORIAL MAX_IN_LIST SUM_LIST AVERAGE_LIST IS_PRIME FIBONACCI
 %token <num> MIN_IN_LIST REVERSE_STRING IS_IN_LIST CELSIUS_TO_FAHRENHEIT FAHRENHEIT_TO_CELSIUS
 %token <num> CHAR_COUNT CONTAINS_SUBSTRING MAX_IN_MATRIX IS_PALINDROME TO_UPPERCASE TO_LOWERCASE

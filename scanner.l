@@ -1,4 +1,5 @@
 %{
+#include "common.h"
 #include "parser.tab.h"  // ضروری برای ارتباط با Bison
 #include <stdlib.h>      // برای توابعی مثل atoi
 #include <string.h>      // برای توابع رشته‌ای (اگر نیاز است)
