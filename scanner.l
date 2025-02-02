@@ -1,21 +1,13 @@
 %{
-#include "parser.tab.h"
+#include "parser.tab.h"  
 #include <stdlib.h>
+#include <string.h>
+
+#define YYSTYPE int 
 %}
 
 %%
-[ \t\n]         ; // نادیده گرفتن فاصله و تب
-[0-9]+          { yylval = atoi(yytext); return NUMBER; }
-[a-zA-Z][a-zA-Z0-9]*  { yylval.str = strdup(yytext); return ID; }
-"+"             { return PLUS; }
-"-"             { return MINUS; }
-"*"             { return MULTIPLY; }
-"/"             { return DIVIDE; }
-"="             { return ASSIGN; }
-";"             { return SEMICOLON; }
-"("             { return LPAREN; }
-")"             { return RPAREN; }
-.               { printf("Invalid character: %s\n", yytext); }
+
 "is_even"               { return IS_EVEN; }
 "factorial"             { return FACTORIAL; }
 "max_in_list"           { return MAX_IN_LIST; }
@@ -48,11 +40,11 @@
 "gcd"                   { return GCD; }
 "lcm"                   { return LCM; }
 [a-zA-Z][a-zA-Z0-9]*    { return IDENTIFIER; }
-[0-9]+                  { return NUMBER; }
+[0-9]+                  { yylval = atoi(yytext); return NUMBER; }
 ";"                     { return SEMICOLON; }
-.                       { return yytext[0]; }
-\n                      { /* ignored */ }
-[ \t]+                  { /* ignored */ }
+[ \t\n]                 { /* نادیده گرفتن فاصله و خط جدید */ }
+.                       { printf("Invalid Character: %s\n", yytext); }
+
 %%
 
 int yywrap() {
