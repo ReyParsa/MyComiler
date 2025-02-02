@@ -1,9 +1,10 @@
 %{
 #include "parser.tab.h"  // ضروری برای ارتباط با Bison
-#include <stdlib.h>
-#include <string.h>
+#include <stdlib.h>      // برای توابعی مثل atoi
+#include <string.h>      // برای توابع رشته‌ای (اگر نیاز است)
 
-#define YYSTYPE int  // اگر فقط از اعداد استفاده می‌کنید، این خط را اضافه کنید
+// تعریف YYSTYPE مطابق با %union در parser.y
+extern YYSTYPE yylval;
 %}
 
 %%
@@ -39,14 +40,28 @@
 "unique_elements"       { return UNIQUE_ELEMENTS; }
 "gcd"                   { return GCD; }
 "lcm"                   { return LCM; }
-[a-zA-Z][a-zA-Z0-9]*    { return IDENTIFIER; }
-[0-9]+                  { yylval = atoi(yytext); return NUMBER; }
+
+[a-zA-Z][a-zA-Z0-9]*    { 
+    // اگر نیاز به ذخیره شناسه دارید:
+    // yylval.str = strdup(yytext);
+    return IDENTIFIER; 
+}
+
+[0-9]+                  { 
+    yylval.num = atoi(yytext); // مقداردهی به قسمت num از union
+    return NUMBER; 
+}
+
 ";"                     { return SEMICOLON; }
-[ \t\n]                 { /* نادیده گرفتن فاصله و خط جدید */ }
+"["                     { return '['; }
+"]"                     { return ']'; }
+","                     { return ','; }
+[ \t\n]                 { /* نادیده گرفتن فاصله، تب و خط جدید */ }
 .                       { printf("Invalid Character: %s\n", yytext); }
 
 %%
 
+// تابع ضروری برای جلوگیری از خطای لینکر
 int yywrap() {
     return 1;
 }

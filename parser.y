@@ -7,7 +7,13 @@ extern int yyparse();
 extern FILE* yyin;
 void yyerror(const char* s);
 
-// برای توابعی که لیست ورودی می‌گیرند (مثلاً max_in_list)
+// تعریف ساختار برای لیست
+typedef struct {
+    int* list;
+    int size;
+} List;
+
+// تابع کمکی برای پیدا کردن ماکزیمم در لیست
 int find_max(int* list, int size) {
     int max = list[0];
     for (int i = 1; i < size; i++) {
@@ -15,15 +21,25 @@ int find_max(int* list, int size) {
     }
     return max;
 }
-
 %}
 
-%token NUMBER IDENTIFIER SEMICOLON
-%token IS_EVEN FACTORIAL MAX_IN_LIST SUM_LIST AVERAGE_LIST IS_PRIME FIBONACCI
-%token MIN_IN_LIST REVERSE_STRING IS_IN_LIST CELSIUS_TO_FAHRENHEIT FAHRENHEIT_TO_CELSIUS
-%token CHAR_COUNT CONTAINS_SUBSTRING MAX_IN_MATRIX IS_PALINDROME TO_UPPERCASE TO_LOWERCASE
-%token UPPERCASE_COUNT LOWERCASE_COUNT SWAP_CASE BINARY_SEARCH SELECTION_SORT BUBBLE_SORT
-%token TO_BINARY BINARY_TO_DECIMAL REMOVE_EXTRA_SPACES COMBINATION UNIQUE_ELEMENTS GCD LCM
+// تعریف union برای انواع داده‌ها
+%union {
+    int num;        // برای اعداد
+    List list;      // برای لیست‌ها
+}
+
+%token <num> NUMBER
+%token <num> IS_EVEN FACTORIAL MAX_IN_LIST SUM_LIST AVERAGE_LIST IS_PRIME FIBONACCI
+%token <num> MIN_IN_LIST REVERSE_STRING IS_IN_LIST CELSIUS_TO_FAHRENHEIT FAHRENHEIT_TO_CELSIUS
+%token <num> CHAR_COUNT CONTAINS_SUBSTRING MAX_IN_MATRIX IS_PALINDROME TO_UPPERCASE TO_LOWERCASE
+%token <num> UPPERCASE_COUNT LOWERCASE_COUNT SWAP_CASE BINARY_SEARCH SELECTION_SORT BUBBLE_SORT
+%token <num> TO_BINARY BINARY_TO_DECIMAL REMOVE_EXTRA_SPACES COMBINATION UNIQUE_ELEMENTS GCD LCM
+%token SEMICOLON
+
+// تعریف نوع‌دهی برای غیرتوکن‌ها (مثلاً expression و list)
+%type <num> expression
+%type <list> list numbers
 
 %%
 
@@ -32,10 +48,10 @@ program:
     ;
 
 statement:
-    IS_EVEN NUMBER {
+    IS_EVEN expression {
         printf("%s %d: %s\n", "is_even", $2, ($2 % 2 == 0) ? "true" : "false");
     }
-    | FACTORIAL NUMBER {
+    | FACTORIAL expression {
         int result = 1;
         for (int i = 1; i <= $2; i++) result *= i;
         printf("%s %d: %d\n", "factorial", $2, result);
@@ -58,17 +74,22 @@ list:
 
 numbers:
     NUMBER { 
-        int* arr = malloc(sizeof(int));
-        arr[0] = $1;
-        $$.list = arr;
-        $$.size = 1;
+        List lst;
+        lst.list = malloc(sizeof(int));
+        lst.list[0] = $1;
+        lst.size = 1;
+        $$ = lst;
     }
     | numbers ',' NUMBER {
         $1.list = realloc($1.list, ($1.size + 1) * sizeof(int));
         $1.list[$1.size] = $3;
-        $$.size = $1.size + 1;
-        $$.list = $1.list;
+        $1.size++;
+        $$ = $1;
     }
+    ;
+
+expression:
+    NUMBER { $$ = $1; }
     ;
 
 %%
