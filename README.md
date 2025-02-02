@@ -132,6 +132,4 @@ Contributions are welcome! If you'd like to add new features, fix bugs, or impro
 
 ## Acknowledgments
 
-- This project was inspired by my studies in compiler design and language processing.
-- Special thanks to the creators of **Flex** and **Bison** for providing such powerful tools.
-
+This project was inspired by my studies in compiler design and language processing. I also received valuable assistance from AI tools and instructional videos on YouTube, which greatly enhanced my understanding and ability to implement the features of this compiler. Special thanks to the creators of Flex and Bison for providing such powerful tools.
